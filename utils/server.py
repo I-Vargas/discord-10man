@@ -59,7 +59,7 @@ class WebServer:
                     self.logger.info('File Found')
                     return web.FileResponse(f'./{request.path}.json')
                 else:
-                    self.logger.error('Invalid Request, File not Found')
+                    self.logger.error(f'Invalid Request "{request.path}", File not Found')
                     return WebServer._http_error_handler('file not found')
 
         # or "Authorization"
@@ -67,7 +67,7 @@ class WebServer:
             try:
                 get5_event = await request.json()
             except JSONDecodeError:
-                self.logger.warning(f'{request.remote} sent a invalid json POST ')
+                self.logger.warning(f'{request.remote} sent a invalid json POST')
                 return WebServer._http_error_handler('json-body')
 
             # TODO: Create Checks for the JSON

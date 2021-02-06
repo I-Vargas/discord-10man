@@ -26,8 +26,8 @@ from utils.csgo_server import CSGOServer
 from utils.veto_image import VetoImage
 
 # TODO: Allow administrators to update the map list
-active_map_pool = ['de_mirage', 'de_inferno', 'de_overpass', 'de_vertigo', 'de_nuke', 'de_train', 'de_dust2', 'de_cache', 'de_cbble']
-reserve_map_pool = ['cs_agency', 'cs_office']
+active_map_pool = ['de_mirage', 'de_inferno', 'de_overpass']
+reserve_map_pool = ['cs_agency', 'cs_office', 'de_vertigo', 'de_nuke', 'de_train', 'de_dust2', 'de_cache', 'de_cbble']
 current_map_pool = active_map_pool.copy()
 
 veto_image_fp = './veto_image_assets/result.png'
@@ -396,12 +396,16 @@ class CSGO(commands.Cog):
         await ctx.send('If you are coaching, once you join the server, type .coach')
         loading_map_message = await ctx.send('Server is being configured')
         await asyncio.sleep(0.5)
+        print("before get5 trigger")
         get5_trigger = valve.rcon.execute((csgo_server.server_address, csgo_server.server_port),
                                           csgo_server.RCON_password,
                                           'exec triggers/get5')
+        print("after get5 trigger")
         self.logger.debug(f'Executing get5_trigger (something for Yannicks Server) \n {get5_trigger}')
         await asyncio.sleep(10)
+        print("before loading_map_message")
         await loading_map_message.delete()
+        print("after loading_map_message")
         load_match = valve.rcon.execute((csgo_server.server_address, csgo_server.server_port),
                                         csgo_server.RCON_password,
                                         f'get5_loadmatch_url "{bot_ip}:{self.bot.web_server.port}/{match_id}"')

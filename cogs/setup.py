@@ -235,6 +235,18 @@ class Setup(commands.Cog):
             print(f'Server #{server.id} | {test_message}')
             self.logger.debug(f'Server #{server.id} | {test_message}')
 
+    @commands.command(help='Command to RCON commands.',
+                      brief='Command to RCON commands.', usage='<command>')
+    @commands.has_permissions(administrator=True)
+    async def RCON_command(self, ctx: commands.Context, *, command: str):
+        self.logger.debug(f'{ctx.author}: {ctx.prefix}{ctx.invoked_with} {ctx.args[2:]}')
+        for server in self.bot.servers:
+            command_exec = valve.rcon.execute((server.server_address, server.server_port), server.RCON_password,
+                                              f'{command}')
+            print(f'Server #{server.id} | {command_exec}')
+            self.logger.debug(f'Server #{server.id} | {command_exec}')
+
+    @RCON_command.error
     @RCON_message.error
     async def RCON_message_error(self, ctx: commands.Context, error: Exception):
         if isinstance(error, commands.MissingPermissions):
