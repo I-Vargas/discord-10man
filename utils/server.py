@@ -55,7 +55,7 @@ class WebServer:
                 return web.FileResponse('./veto_image_assets/result.png')
             else:
                 self.logger.debug(f'{request.remote} accessed {self.IP}:{self.port}{request.path}')
-                if os.path.isfile(f'./{request.path}.json'):
+                if os.path.isfile(f'./matches/{request.path}.json'):
                     self.logger.info('File Found')
                     return web.FileResponse(f'./{request.path}.json')
                 else:
