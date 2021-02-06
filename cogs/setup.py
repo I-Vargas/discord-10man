@@ -52,7 +52,6 @@ class Setup(commands.Cog):
     @commands.command(aliases=['spectator', 'spec'],
                       help='Adds this user as a spectator in the config for the next map.',
                       brief='Add user as spectator', usage='<@User>')
-    @commands.has_permissions(administrator=True)
     async def add_spectator(self, ctx: commands.Context, spec: discord.Member):
         self.logger.debug(f'{ctx.author}: {ctx.prefix}{ctx.invoked_with} {ctx.args[2:]}')
         db = Database('sqlite:///main.sqlite')
@@ -74,7 +73,6 @@ class Setup(commands.Cog):
 
     @commands.command(aliases=['queue_captain', 'captain'],
                       help='Set\'s the queue captain for the next match', usage='<@User> ?<@User>')
-    @commands.has_permissions(administrator=True)
     async def set_queue_captain(self, ctx: commands.Context, *args: discord.Member):
         self.logger.debug(f'{ctx.author}: {ctx.prefix}{ctx.invoked_with} {ctx.args[2:]}')
         db = Database('sqlite:///main.sqlite')
@@ -99,7 +97,6 @@ class Setup(commands.Cog):
 
     @commands.command(aliases=['empty'],
                       help='Empties the queue')
-    @commands.has_permissions(administrator=True)
     async def empty_queue(self, ctx: commands.Context):
         self.logger.debug(f'{ctx.author}: {ctx.prefix}{ctx.invoked_with} {ctx.args[2:]}')
         for member in self.bot.queue_voice_channel.members:
@@ -113,7 +110,6 @@ class Setup(commands.Cog):
     @commands.command(aliases=['remove_spec'],
                       help='Removes this user as a spectator from the config.',
                       brief='Removes user as spectator', usage='<@User>')
-    @commands.has_permissions(administrator=True)
     async def remove_spectator(self, ctx: commands.Context, spec: discord.Member):
         self.logger.debug(f'{ctx.author}: {ctx.prefix}{ctx.invoked_with} {ctx.args[2:]}')
         db = Database('sqlite:///main.sqlite')
@@ -150,7 +146,6 @@ class Setup(commands.Cog):
     @commands.command(aliases=['setupqueue', 'queue_setup', 'queuesetup'],
                       help='Command to set the server for the queue system. You must be in a voice channel.',
                       brief='Set\'s the server for the queue')
-    @commands.has_permissions(administrator=True)
     @commands.check(checks.voice_channel)
     async def setup_queue(self, ctx: commands.Context, enabled: bool = True):
         self.logger.debug(f'{ctx.author}: {ctx.prefix}{ctx.invoked_with} {ctx.args[2:]}')
@@ -186,7 +181,6 @@ class Setup(commands.Cog):
     @commands.command(aliases=['restart_queue'],
                       help='The command forcefully restarts the queue.',
                       brief='Restart\'s the queue')
-    @commands.has_permissions(administrator=True)
     @commands.check(checks.queue_running)
     async def force_restart_queue(self, ctx: commands.Context):
         self.logger.debug(f'{ctx.author}: {ctx.prefix}{ctx.invoked_with} {ctx.args[2:]}')
@@ -207,7 +201,6 @@ class Setup(commands.Cog):
     @commands.command(aliases=['setup_queue_size', 'match_size', 'queue_size', 'set_match_size', 'set_queue_size'],
                       help='This command sets the size of the match and the queue.',
                       brief='Sets the size of the match & queue', usage='<size>')
-    @commands.has_permissions(administrator=True)
     async def setup_match_size(self, ctx: commands.Context, size: int):
         self.logger.debug(f'{ctx.author}: {ctx.prefix}{ctx.invoked_with} {ctx.args[2:]}')
         if size <= 0:
