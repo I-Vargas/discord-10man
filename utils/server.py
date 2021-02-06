@@ -49,13 +49,8 @@ class WebServer:
                 return web.json_response({'path': self.create_new_veto_filepath()})
             elif request.path == self.map_veto_image_path:
                 return web.FileResponse('./veto_image_assets/result.png')
-            elif request.path.startswith('/PUG'):
-                if os.path.isfile(f'./{request.path}.json'):
-                    self.logger.info('File Found')
-                    return web.FileResponse(f'./{request.path}.json')
-                else:
-                    self.logger.error('File not Found')
-                    return WebServer._http_error_handler('file not found')
+            elif request.path.startswith('/PUG') and os.path.isfile(f'./{request.path}.json'):
+                return web.FileResponse(f'./{request.path}.json')
             else:
                 self.logger.error('Invalid Request Path')
                 return WebServer._http_error_handler('invalid request path')
@@ -130,11 +125,12 @@ class WebServer:
                     score_embed.set_footer(text='🟥 Ended')
                     await server.score_message.edit(embed=score_embed)
 
-                    if os.path.exists(f'./{get5_event["matchid"]}.json'):
-                        os.remove(f'./{get5_event["matchid"]}.json')
-                        self.logger.debug(f'Deleted {get5_event["matchid"]}.json')
+                    match_file = f'{get5_event["matchid"]}.json'
+                    if os.path.exists(f'./{match_file}'):
+                        os.remove(f'./{match_file}')
+                        self.logger.debug(f'Deleted {match_file}')
                     else:
-                        self.logger.error(f'Could not delete {get5_event["matchid"]}.json, file does not exist')
+                        self.logger.error(f'Could not delete {match_file} as the file does not exist')
 
                     if self.bot.cogs['CSGO'].pug.enabled:
                         for player in server.players:
