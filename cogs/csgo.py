@@ -26,8 +26,8 @@ from utils.csgo_server import CSGOServer
 from utils.veto_image import VetoImage
 
 # TODO: Allow administrators to update the map list
-active_map_pool = ['de_inferno', 'de_train', 'de_mirage', 'de_nuke', 'de_overpass', 'de_dust2', 'de_vertigo']
-reserve_map_pool = ['de_cache', 'de_cbble', 'cs_office', 'cs_agency']
+active_map_pool = ['de_mirage', 'de_inferno', 'de_overpass', 'de_vertigo', 'de_nuke', 'de_train', 'de_dust2', 'de_cache', 'de_cbble']
+reserve_map_pool = ['cs_agency', 'cs_office']
 current_map_pool = active_map_pool.copy()
 
 veto_image_fp = './veto_image_assets/result.png'
