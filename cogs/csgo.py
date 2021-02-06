@@ -372,45 +372,36 @@ class CSGO(commands.Cog):
             },
             'team1': {
                 'name': team1_name,
-                'tag': 'team1',
+                'tag': team1_name,
                 'flag': team1_country,
                 'players': team1_steamIDs
             },
             'team2': {
                 'name': team2_name,
-                'tag': 'team2',
+                'tag': team2_name,
                 'flag': team2_country,
                 'players': team2_steamIDs
             },
             'cvars': {
                 'get5_event_api_url': f'http://{bot_ip}:{self.bot.web_server.port}/',
+                'get5_kick_when_no_match_loaded': 0,
                 'get5_print_damage': 1,
+                'hostname': f'[LIVE] Picarotos | {team1_name} vs. {team2_name}'
             }
         }
 
         self.logger.debug(f'Match Config =\n {pprint.pformat(match_config)}')
 
-        with open(f'./matches/{match_id}.json', 'w') as outfile:
-            json.dump(match_config, outfile, ensure_ascii=False, indent=4)
+        with open(f'./{match_id}.json', 'w') as outfile:
+            json.dump(match_config, outfile, ensure_ascii=False, indent=2)
 
         await ctx.send('If you are coaching, once you join the server, type .coach')
         loading_map_message = await ctx.send('Server is being configured')
-        await asyncio.sleep(0.5)
-        print("before get5 trigger")
-        get5_trigger = valve.rcon.execute((csgo_server.server_address, csgo_server.server_port),
-                                          csgo_server.RCON_password,
-                                          'exec triggers/get5')
-        print("after get5 trigger")
-        self.logger.debug(f'Executing get5_trigger (something for Yannicks Server) \n {get5_trigger}')
-        await asyncio.sleep(10)
-        print("before loading_map_message")
         await loading_map_message.delete()
-        print("after loading_map_message")
         load_match = valve.rcon.execute((csgo_server.server_address, csgo_server.server_port),
                                         csgo_server.RCON_password,
                                         f'get5_loadmatch_url "{bot_ip}:{self.bot.web_server.port}/{match_id}"')
         self.logger.debug(f'Load Match via URL\n {load_match}')
-        await asyncio.sleep(5)
         connect_embed = await self.connect_embed(csgo_server)
         if self.bot.connect_dm:
             for player in team1 + team2 + self.bot.spectators:
@@ -421,6 +412,7 @@ class CSGO(commands.Cog):
                     self.logger.warning(f'{player} was not sent the IP via DM')
         else:
             await ctx.send(embed=connect_embed)
+
         score_embed = discord.Embed()
         score_embed.add_field(name='0', value=team1_name, inline=True)
         score_embed.add_field(name='0', value=team2_name, inline=True)

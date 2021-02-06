@@ -235,15 +235,16 @@ class Setup(commands.Cog):
             print(f'Server #{server.id} | {test_message}')
             self.logger.debug(f'Server #{server.id} | {test_message}')
 
-    @commands.command(help='Command to RCON commands.',
+    @commands.command(aliases=['RCON_command'],
+                      help='Command to RCON commands.',
                       brief='Command to RCON commands.', usage='<command>')
     @commands.has_permissions(administrator=True)
     async def RCON_cmd(self, ctx: commands.Context, *, cmd: str):
         self.logger.debug(f'{ctx.author}: {ctx.prefix}{ctx.invoked_with} {ctx.args[2:]}')
         for server in self.bot.servers:
-            print(cmd)
+            print(f'test: {cmd}')
             server_response = valve.rcon.execute((server.server_address, server.server_port), server.RCON_password,
-                                              f'{cmd}')
+                                                 f'{cmd}')
             self.logger.debug(f'Server #{server.id} | {server_response}')
 
     @RCON_cmd.error

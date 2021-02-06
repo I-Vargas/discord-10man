@@ -42,25 +42,23 @@ class WebServer:
         """
 
         if request.method == 'GET':
+            self.logger.debug(f'{request.remote} requested {self.IP}:{self.port}{request.path}')
             if request.path == '/match':
-                self.logger.debug(f'{request.remote} accessed {self.IP}:{self.port}/match')
                 return web.FileResponse('./match_config.json')
             elif request.path == '/map-veto':
-                self.logger.debug(f'{request.remote} accessed {self.IP}:{self.port}/map-veto')
-                self.map_veto_image_path = self.create_new_veto_filepath()
-                response = {'path': self.map_veto_image_path}
-                return web.json_response(response)
+                return web.json_response({'path': self.create_new_veto_filepath()})
             elif request.path == self.map_veto_image_path:
-                self.logger.debug(f'{request.remote} accessed {self.IP}:{self.port}{self.map_veto_image_path}')
                 return web.FileResponse('./veto_image_assets/result.png')
-            else:
-                self.logger.debug(f'{request.remote} accessed {self.IP}:{self.port}{request.path}')
-                if os.path.isfile(f'./matches/{request.path}.json'):
+            elif request.path.startswith('/PUG'):
+                if os.path.isfile(f'./{request.path}.json'):
                     self.logger.info('File Found')
                     return web.FileResponse(f'./{request.path}.json')
                 else:
-                    self.logger.error(f'Invalid Request "{request.path}", File not Found')
+                    self.logger.error('File not Found')
                     return WebServer._http_error_handler('file not found')
+            else:
+                self.logger.error('Invalid Request Path')
+                return WebServer._http_error_handler('invalid request path')
 
         # or "Authorization"
         elif request.method == 'POST':
