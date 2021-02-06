@@ -11,7 +11,7 @@ from utils.csgo_server import CSGOServer
 from utils.server import WebServer
 
 __version__ = '1.7.1'
-__dev__ = 745000319942918303
+__dev__ = 806253900415762453
 # __dev__ = None
 
 
